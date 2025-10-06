@@ -1,12 +1,8 @@
 package imoong.splearn.domain;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,13 +27,13 @@ class MemberTest {
             }
         };
 
-        member = Member.create(new MemberCreateRequest("imoong@splearn.com", "imoong", "secret"),
+        member = Member.register(new MemberRegisterRequest("imoong@splearn.com", "imoong", "secret"),
             passwordEncoder);
     }
 
 
     @Test
-    void createMember() {
+    void registerMember() {
 
         assertThat(member.getStatus()).isEqualTo(MemberStatus.PENDING);
     }
@@ -120,9 +116,9 @@ class MemberTest {
     @Test
     void invalidEmail() {
         assertThatThrownBy(
-            () -> Member.create(new MemberCreateRequest("invalid", "imoong", "secret"),
+            () -> Member.register(new MemberRegisterRequest("invalid", "imoong", "secret"),
                 passwordEncoder)).isInstanceOf(IllegalArgumentException.class);
-        Member.create(new MemberCreateRequest("kw3082@naver.com", "imoong", "secret"),
+        Member.register(new MemberRegisterRequest("kw3082@naver.com", "imoong", "secret"),
             passwordEncoder);
 
 
