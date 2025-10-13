@@ -1,6 +1,6 @@
-package imoong.splearn.application.required;
+package imoong.splearn.application.member.required;
 
-import imoong.splearn.domain.Email;
+import imoong.splearn.domain.shared.Email;
 
 
 public interface EmailSender {

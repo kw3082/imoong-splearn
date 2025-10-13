@@ -1,4 +1,4 @@
-package imoong.splearn.domain;
+package imoong.splearn.domain.shared;
 
 import java.util.regex.Pattern;
 
@@ -12,7 +12,6 @@ public record Email(String address) {
         if (!EMAIL_PATTERN.matcher(address).matches()) {
             throw new IllegalArgumentException("이메일 형식이 바르지 않습니다 " + address);
         }
-
     }
 
 }

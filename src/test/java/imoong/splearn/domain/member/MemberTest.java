@@ -1,7 +1,8 @@
-package imoong.splearn.domain;
+package imoong.splearn.domain.member;
 
+import static imoong.splearn.domain.member.MemberFixture.createMemberRegisterRequest;
+import static imoong.splearn.domain.member.MemberFixture.createPasswordEncoder;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -15,35 +16,29 @@ class MemberTest {
     @BeforeEach
     void setUp() throws Exception {
 
-        this.passwordEncoder = new PasswordEncoder() {
-            @Override
-            public String encode(String password) {
-                return password.toUpperCase();
-            }
+        this.passwordEncoder = createPasswordEncoder();
 
-            @Override
-            public boolean matches(String password, String passwordHash) {
-                return encode(password).equals(passwordHash);
-            }
-        };
-
-        member = Member.register(new MemberRegisterRequest("imoong@splearn.com", "imoong", "secret"),
+        member = Member.register(createMemberRegisterRequest(),
             passwordEncoder);
     }
 
 
+
+
     @Test
     void registerMember() {
-
         assertThat(member.getStatus()).isEqualTo(MemberStatus.PENDING);
+        assertThat(member.getDetail().getRegisteredAt()).isNotNull();
     }
 
     @Test
     void activate() {
+        assertThat(member.getDetail().getActivatedAt()).isNull();
 
         member.activate();
 
         assertThat(member.getStatus()).isEqualTo(MemberStatus.ACTIVE);
+        assertThat(member.getDetail().getActivatedAt()).isNotNull();
     }
 
     @Test
@@ -62,6 +57,7 @@ class MemberTest {
         member.deactivate();
 
         assertThat(member.getStatus()).isEqualTo(MemberStatus.DEACTIVATED);
+        assertThat(member.getDetail().getDeactivatedAt()).isNotNull();
     }
 
     @Test
@@ -79,7 +75,7 @@ class MemberTest {
 
     @Test
     void verifyPassword() {
-        assertThat(member.verifyPassword("secret", passwordEncoder)).isTrue();
+        assertThat(member.verifyPassword("longsecret", passwordEncoder)).isTrue();
         assertThat(member.verifyPassword("false", passwordEncoder)).isFalse();
 
     }
@@ -116,11 +112,31 @@ class MemberTest {
     @Test
     void invalidEmail() {
         assertThatThrownBy(
-            () -> Member.register(new MemberRegisterRequest("invalid", "imoong", "secret"),
+            () -> Member.register(createMemberRegisterRequest("invalid"),
                 passwordEncoder)).isInstanceOf(IllegalArgumentException.class);
-        Member.register(new MemberRegisterRequest("kw3082@naver.com", "imoong", "secret"),
+        Member.register(createMemberRegisterRequest(),
             passwordEncoder);
 
 
     }
+
+    @Test
+    void updateInfo() {
+        member.activate();
+
+        MemberInfoUpdateRequest updateRequest = new MemberInfoUpdateRequest("sangwoong", "kw3082",
+            "안녕하세요");
+
+        member.updateInfo(updateRequest);
+
+        assertThat(member.getNickname()).isEqualTo(updateRequest.nickname());
+        assertThat(member.getDetail().getProfile().address()).isEqualTo(updateRequest.profileAddress());
+        assertThat(member.getDetail().getIntroduction()).isEqualTo(updateRequest.introduction());
+
+
+
+
+    }
+
+
 }

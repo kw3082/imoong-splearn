@@ -1,7 +1,6 @@
-package imoong.splearn.domain;
+package imoong.splearn.domain.shared;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 

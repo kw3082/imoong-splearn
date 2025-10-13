@@ -1,4 +1,4 @@
-package imoong.splearn.domain;
+package imoong.splearn.domain.member;
 
 public interface PasswordEncoder {
     String encode(String password);
